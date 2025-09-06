@@ -1,7 +1,7 @@
 # Software Design Principles – Notification System (Python)
 
 [//]: # (Replace USERNAME and REPO below after pushing the repo)
-[![Python application](https://github.com/USERNAME/REPO/actions/workflows/python-app.yml/badge.svg)](https://github.com/USERNAME/REPO/actions/workflows/python-app.yml)
+[![Python application](https://github.com/Brunoenr02/software_design_principles_python/actions/workflows/python-app.yml/badge.svg)](https://github.com/Brunoenr02/software_design_principles_python/actions/workflows/python-app.yml)
 
 A tiny, production-style example that demonstrates SOLID design principles using a notification service in Python.
 
