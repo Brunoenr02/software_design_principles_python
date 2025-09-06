@@ -1,15 +1,37 @@
 # Software Design Principles – Notification System (Python)
 
-[//]: # (Replace USERNAME and REPO below after pushing the repo)
 [![Python application](https://github.com/Brunoenr02/software_design_principles_python/actions/workflows/python-app.yml/badge.svg)](https://github.com/Brunoenr02/software_design_principles_python/actions/workflows/python-app.yml)
 
-A tiny, production-style example that demonstrates SOLID design principles using a notification service in Python.
+A tiny, production-style example that demonstrates **SOLID design principles** using a notification service in Python.
 
-## What’s inside
-- **SRP, OCP, LSP, DIP** applied to a real scenario
+## 🎯 Design Principles Demonstrated
+
+### **S** - Single Responsibility Principle (SRP)
+- Each notifier class has only one responsibility: sending notifications via its specific channel
+- `NotificationService` has only one responsibility: orchestrating the notification process
+
+### **O** - Open/Closed Principle (OCP)
+- Easy to add new notification channels without modifying existing code
+- Just implement the `Notifier` interface and plug it in
+
+### **L** - Liskov Substitution Principle (LSP)
+- All notifier implementations are interchangeable
+- `EmailNotifier`, `SMSNotifier`, and `PushNotifier` can be substituted without breaking functionality
+
+### **I** - Interface Segregation Principle (ISP)
+- The `Notifier` interface is minimal and focused
+- No client is forced to depend on methods it doesn't use
+
+### **D** - Dependency Inversion Principle (DIP)
+- `NotificationService` depends on the `Notifier` abstraction, not concrete implementations
+- High-level modules don't depend on low-level modules
+
+## What's inside
+- **Complete SOLID implementation** with a practical notification system
 - `src/notifications/` with abstractions and concrete notifiers
-- Unit tests with `pytest`
-- GitHub Actions workflow for CI (`.github/workflows/python-app.yml`)
+- Unit tests with `pytest` demonstrating testability
+- GitHub Actions workflow for CI/CD
+- Extensible architecture for adding new notification channels
 
 ## Quickstart
 
@@ -35,8 +57,8 @@ python src/main.py --channel sms --message "Your OTP is 123456"
 python src/main.py --channel push --message "You have a new message"
 ```
 
-## Extend: add a new channel
-Create a new class that implements `Notifier` (e.g., `SlackNotifier`) and pass it to `NotificationService` without touching existing classes (OCP).
+## 🚀 Extend: Add a new channel (OCP in action)
+Create a new class that implements `Notifier` without touching existing classes:
 
 ```python
 # src/notifications/slack_notifier.py
@@ -46,11 +68,16 @@ class SlackNotifier(Notifier):
     def send(self, message: str) -> None:
         print(f"Sending SLACK: {message}")
 
-# usage
-# from notifications.slack_notifier import SlackNotifier
-# NotificationService(SlackNotifier()).notify("Hello Slack!")
+# Register in main.py
+def create_notifier(channel: str) -> Notifier:
+    notifiers = {
+        "email": EmailNotifier(),
+        "sms": SMSNotifier(),
+        "push": PushNotifier(),
+        "slack": SlackNotifier(),  # ← New channel added!
+    }
+    return notifiers[channel]
 ```
-
 ## CI: GitHub Actions
 The pipeline installs dependencies and runs pytest on each push and pull request.
 
@@ -73,20 +100,34 @@ jobs:
         run: pytest -q
 ```
 
+## 🏗️ Architecture Benefits
+
+- **Maintainable**: Changes to one notifier don't affect others
+- **Testable**: Easy to mock and unit test each component
+- **Extensible**: Add new notification channels effortlessly
+- **Readable**: Clear separation of concerns and responsibilities
+- **Type-safe**: Full type hints for better IDE support
+
+## 🧪 Testing Strategy
+- Unit tests for each notifier implementation
+- Integration tests for the notification service
+- Mocking examples for external dependencies
+- CI pipeline ensures code quality
+
 ## Project structure
 ```
 .
 ├── .github/
 │   └── workflows/
-│       └── python-app.yml
+│       └── python-app.yml       # CI/CD pipeline
 ├── src/
-│   ├── main.py
+│   ├── main.py                  # CLI demo application
 │   └── notifications/
-│       ├── __init__.py
-│       ├── notifiers.py
-│       └── service.py
+│       ├── __init__.py          # Package exports
+│       ├── notifiers.py         # Abstract base + implementations
+│       └── service.py           # Main service orchestrator
 ├── tests/
-│   └── test_notifications.py
+│   └── test_notifications.py   # Comprehensive test suite
 ├── .gitignore
 ├── requirements.txt
 └── README.md
